@@ -1,0 +1,5 @@
+
+srv_port: 80
+application_dir: /var/www/flask_app
+app_process: flask_application
+

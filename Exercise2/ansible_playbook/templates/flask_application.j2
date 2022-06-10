@@ -1,0 +1,24 @@
+# The Apache configuration
+
+# The apache config file found in /etc/apache2/sites-available/ in Debian/Ubuntu
+# Note that this is in sites-available not sites-enabled. Sites-enabled only contains a symlink to sites-available and may be enabled/disabled with a2dissite
+
+<VirtualHost *:{{srv_port}}>
+
+WSGIScriptAlias / {{application_dir}}/wsgi.py
+
+# The daemon process and the options https://code.google.com/p/modwsgi/wiki/ConfigurationDirectives#WSGIDaemonProcess
+WSGIDaemonProcess {{app_process}}  python-path={{application_dir}}/ threads=25 processes=2
+# The name of the process group
+WSGIProcessGroup {{app_process}}
+
+<Directory {{application_dir}}>
+Order deny,allow
+Allow from all
+</Directory>
+
+ErrorLog ${APACHE_LOG_DIR}/error.log
+LogLevel warn
+CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+</VirtualHost>	
