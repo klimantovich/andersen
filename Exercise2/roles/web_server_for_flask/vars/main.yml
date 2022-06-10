@@ -1,8 +1,10 @@
 ---
-# vars file for web_server_for_flask
-
 srv_port: 80
 local_application_dir: ./flask_app
 application_dir: /var/www/flask_app
 app_process: flask_application
+install_packages:
+  - apache2
+  - python3
+  - python3-pip
 

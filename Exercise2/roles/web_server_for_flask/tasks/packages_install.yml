@@ -1,11 +1,12 @@
 ---
 #need update & upgrade tasks
+- name: update repos
+  ansible.builtin.apt:
+    update_cache: 'yes'
+    upgrade: 'yes'
 
 - name: install web-server Apache, python & pip3
   ansible.builtin.apt:
     name: "{{ item }}"
     state: present
-  loop:
-    - apache2
-    - python3
-    - python3-pip
+  loop: "{{ install_packages }}"
