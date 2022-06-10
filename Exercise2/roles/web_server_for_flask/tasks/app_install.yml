@@ -1,0 +1,11 @@
+---
+
+- name: Copying application to remote server
+  ansible.builtin.copy:
+    src: "{{ local_application_dir }}"
+    dest: /var/www/
+
+- name: install python packages from requirements.txt
+  ansible.builtin.pip:
+    requirements: "{{ application_dir }}/requirements.txt"
+

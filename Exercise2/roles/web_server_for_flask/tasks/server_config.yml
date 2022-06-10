@@ -1,0 +1,21 @@
+---
+
+- name: Copying flask site config for apache
+  ansible.builtin.template:
+    src: ./templates/flask_application.j2
+    dest: /etc/apache2/sites-available/flask_application.conf
+
+- name: check if wsgi-mod for apache is enabled
+  community.general.apache2_module:
+    name: wsgi
+    state: present
+
+- name: disable 000-default site and enable flask_application site for apache
+  ansible.builtin.shell:
+    cmd: a2dissite 000-default.conf && a2ensite flask_application.conf
+
+- name: Restart web server
+  ansible.builtin.service:
+    name: apache2
+    state: reloaded
+

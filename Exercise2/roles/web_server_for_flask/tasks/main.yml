@@ -1,0 +1,12 @@
+---
+# tasks file for web_server_for_flask
+
+- name: include packages installation tasks
+  include_tasks: "packages_install.yml"
+
+- name: include application install tasks
+  include_tasks: "app_install.yml"
+
+- name: include server configuration tasks
+  include_tasks: "server_config.yml"
+

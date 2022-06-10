@@ -1,0 +1,6 @@
+---
+- name: config web-server with flask application
+  hosts: ubuntu_servers
+  become: yes
+  roles:
+    - role: web_server_for_flask
