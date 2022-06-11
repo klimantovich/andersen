@@ -1,16 +1,16 @@
 #!/bin/bash
 
 VERBOSE=false
-NUMBERS=false
+COUNT=false
 
-while [[ $# -gt 0 ]]; do
+while [ $# -gt 0 ]; do
   case $1 in
     -v|--verbose)
       VERBOSE=true
       shift # past argument
       ;;
     -c|--count)
-      NUMBERS=true
+      COUNT=true
       shift # past argument
       ;;
     -*|--*)
@@ -29,5 +29,22 @@ if [ -z $PROCESS ]; then
   exit 1
 fi
 
-sudo netstat -tunapl | awk -v proc=$PROCESS '$0 ~ proc {print $5}' | cut -d: -f1 | sort | uniq -c | sort | tail -n5 | grep -oP '(\d+\.){3}\d+' | while read IP ; do whois $IP | awk -F':' '/^Organization/ {print $2}' ; done
+get_connection_info () {
+  if $VERBOSE; then	  
+    whois $IP | awk -F':' '/^Organization/ {print $2} /^CIDR/ {print $2} /^NetName/ {print $2}' | sed s/' '//g
+  else
+    whois $IP | awk -F':' '/^Organization/ {print $2}' | sed s/' '//g
+  fi
+}
+
+#add all connections to array all_connections
+all_connections=( $(sudo netstat -tunapl | awk -v proc=$PROCESS '$0 ~ proc {print $5}' | cut -d: -f1) )
+#get unique ip addresses from list all_connections
+ip_addresses=($(for ip in "${all_connections[@]}"; do echo "${ip}"; done | sort -u))
+
+#get info from whois. Based in $VERBOSE variable
+for IP in ${ip_addresses[*]}
+do
+    get_connection_info
+done
 
